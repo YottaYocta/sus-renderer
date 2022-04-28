@@ -1,15 +1,12 @@
 import { Context } from "./context";
 import { Vec3, Vec2, Ray } from "./utils";
-import { intersectSphere } from "./intersection";
 import { Sphere } from "./primitives";
 
 export class Camera {
   position: Vec3;
-  aspect: number;
   focal: number;
-  constructor(position = new Vec3(), aspect = 16 / 9, focal = 1) {
+  constructor(position = new Vec3(), focal = 1) {
     this.position = position;
-    this.aspect = aspect;
     this.focal = focal;
   }
 }
@@ -18,6 +15,7 @@ export class Renderer {
   #ctx: Context;
   #camera: Camera;
 
+  #aspect = 1;
   #vh = 2;
   #vw = 2;
   #horizontal = new Vec3();
@@ -30,7 +28,8 @@ export class Renderer {
   }
 
   configure() {
-    this.#vw = this.#vh * this.#camera.aspect;
+    this.#aspect = this.#ctx.width / this.#ctx.height;
+    this.#vw = this.#vh * this.#aspect;
     this.#horizontal = new Vec3(this.#vw, 0, 0);
     this.#vertical = new Vec3(0, this.#vh, 0);
     this.#lowerCorner = this.#camera.position
@@ -54,7 +53,7 @@ export class Renderer {
           ray: ray,
           normal: new Vec3(),
         };
-        let result = intersectSphere(info, sphere);
+        let result = sphere.intersect(info);
         if (result > 0) {
           this.#ctx.setFlip(new Vec2(j, i), info.normal.add(1).div(2));
         }
