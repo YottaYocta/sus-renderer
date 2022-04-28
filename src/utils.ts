@@ -20,32 +20,27 @@ export class Vec3 {
   }
 
   add(a: Vec3 | number) {
-    if (typeof a === 'number')
+    if (typeof a === "number")
       return new Vec3(this.x + a, this.y + a, this.z + a);
-    else
-      return new Vec3(this.x + a.x, this.y + a.y, this.z + a.z);
+    else return new Vec3(this.x + a.x, this.y + a.y, this.z + a.z);
   }
 
   sub(a: Vec3 | number) {
-    if (typeof a === 'number')
+    if (typeof a === "number")
       return new Vec3(this.x - a, this.y - a, this.z - a);
-    else
-      return new Vec3(this.x - a.x, this.y - a.y, this.z - a.z);
-
+    else return new Vec3(this.x - a.x, this.y - a.y, this.z - a.z);
   }
 
   mul(a: Vec3 | number) {
-    if (typeof a === 'number')
+    if (typeof a === "number")
       return new Vec3(this.x * a, this.y * a, this.z * a);
-    else
-      return new Vec3(this.x * a.x, this.y * a.y, this.z * a.z);
+    else return new Vec3(this.x * a.x, this.y * a.y, this.z * a.z);
   }
 
   div(a: Vec3 | number) {
-    if (typeof a === 'number')
+    if (typeof a === "number")
       return new Vec3(this.x / a, this.y / a, this.z / a);
-    else
-      return new Vec3(this.x / a.x, this.y / a.y, this.z / a.z);
+    else return new Vec3(this.x / a.x, this.y / a.y, this.z / a.z);
   }
 
   dot(a: Vec3) {
@@ -64,7 +59,7 @@ export class Vec3 {
   clone() {
     return new Vec3(this.x, this.y, this.z);
   }
-};
+}
 
 export class Ray {
   origin: Vec3;
