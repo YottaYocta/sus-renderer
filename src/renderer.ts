@@ -16,6 +16,7 @@ export class Renderer {
   #camera: Camera;
 
   #scene = new Scene();
+  #light = new Vec3(1, 2, 0).norm();
 
   #aspect = 1;
   #vh = 2;
@@ -61,7 +62,17 @@ export class Renderer {
         };
         this.#scene.intersect(info);
         if (info.hitTime > 0) {
-          this.#ctx.setFlip(new Vec2(j, i), info.normal.add(1).div(2));
+          this.#ctx.setFlip(
+            new Vec2(j, i),
+            info.normal
+              .add(1)
+              .div(2)
+              .mul(info.normal.dot(this.#light))
+              .add(1)
+              .div(2)
+          );
+        } else {
+          this.#ctx.setFlip(new Vec2(j, i), new Vec3());
         }
       }
     }

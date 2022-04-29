@@ -70,9 +70,6 @@ export class Ray {
   }
 
   clone() {
-    return new Ray(
-      this.origin.clone(),
-      this.direction.clone(),
-    );
+    return new Ray(this.origin.clone(), this.direction.clone());
   }
 }
