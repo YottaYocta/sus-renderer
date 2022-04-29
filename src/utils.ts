@@ -68,4 +68,11 @@ export class Ray {
     this.origin = origin;
     this.direction = direction;
   }
+
+  clone() {
+    return new Ray(
+      this.origin.clone(),
+      this.direction.clone(),
+    );
+  }
 }

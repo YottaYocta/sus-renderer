@@ -1,6 +1,6 @@
 import { Context } from "./context";
 import { Vec3, Vec2, Ray } from "./utils";
-import { Sphere } from "./primitives";
+import { Scene, Primitive } from "./primitives";
 
 export class Camera {
   position: Vec3;
@@ -14,6 +14,8 @@ export class Camera {
 export class Renderer {
   #ctx: Context;
   #camera: Camera;
+
+  #scene = new Scene();
 
   #aspect = 1;
   #vh = 2;
@@ -38,8 +40,11 @@ export class Renderer {
       .sub(new Vec3(0, 0, this.#camera.focal));
   }
 
-  renderSphere() {
-    let sphere = new Sphere(1, new Vec3(0, 0, -2));
+  add(primitive: Primitive) {
+    this.#scene.add(primitive);
+  }
+
+  render() {
     for (let i = 0; i < this.#ctx.height; i++) {
       for (let j = 0; j < this.#ctx.width; j++) {
         let ray = new Ray(
@@ -54,7 +59,7 @@ export class Renderer {
           normal: new Vec3(),
           hitTime: -1,
         };
-        sphere.intersect(info);
+        this.#scene.intersect(info);
         if (info.hitTime > 0) {
           this.#ctx.setFlip(new Vec2(j, i), info.normal.add(1).div(2));
         }

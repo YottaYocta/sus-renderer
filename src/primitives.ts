@@ -10,6 +10,33 @@ export interface Primitive {
   intersect: (info: IntersectionInfo) => void;
 }
 
+export class Scene implements Primitive {
+  #objects: Primitive[] = [];
+  add(object: Primitive) {
+    this.#objects.push(object);
+  }
+
+  clear() {
+    this.#objects.length = 0;
+  }
+
+  intersect(info: IntersectionInfo) {
+    for (let object of this.#objects) {
+      let newInfo = {
+        ray: info.ray.clone(),
+        normal: info.normal.clone(),
+        hitTime: -1,
+      }
+      object.intersect(newInfo);
+      if (newInfo.hitTime > 0 && (info.hitTime > newInfo.hitTime || info.hitTime === -1)) {
+        info.ray = newInfo.ray;
+        info.normal = newInfo.normal;
+        info.hitTime = newInfo.hitTime;
+      }
+    }
+  }
+}
+
 export class Sphere implements Primitive {
   readonly radius: number;
   readonly origin: Vec3;
