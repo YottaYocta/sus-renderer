@@ -52,9 +52,10 @@ export class Renderer {
         let info = {
           ray: ray,
           normal: new Vec3(),
+          hitTime: -1,
         };
-        let result = sphere.intersect(info);
-        if (result > 0) {
+        sphere.intersect(info);
+        if (info.hitTime > 0) {
           this.#ctx.setFlip(new Vec2(j, i), info.normal.add(1).div(2));
         }
       }
