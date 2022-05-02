@@ -6,7 +6,8 @@
     "dev": "vite",
     "watch": "tsc --noEmit --watch",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fmt": "prettier . --write"
   },
   "devDependencies": {
     "prettier": "^2.6.2",

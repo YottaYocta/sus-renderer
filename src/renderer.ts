@@ -1,6 +1,6 @@
 import { Context } from "./context";
-import { Vec3, Vec2, Ray } from "./utils";
-import { Scene, Primitive } from "./primitives";
+import { Vec3, Vec2, Ray, randInUnit } from "./utils";
+import { Scene, Primitive, IntersectionInfo } from "./primitives";
 
 export class Camera {
   position: Vec3;
@@ -16,7 +16,9 @@ export class Renderer {
   #camera: Camera;
 
   #scene = new Scene();
-  #light = new Vec3(1, 2, 0).norm();
+  #light = new Vec3(1, 4, -4);
+  #lightIntensity = 1;
+  #maxBounces = 2;
 
   #aspect = 1;
   #vh = 2;
@@ -59,22 +61,43 @@ export class Renderer {
           ray: ray,
           normal: new Vec3(),
           hitTime: -1,
+          mask: new Vec3(1, 1, 1),
         };
-        this.#scene.intersect(info);
-        if (info.hitTime > 0) {
-          this.#ctx.setFlip(
-            new Vec2(j, i),
-            info.normal
-              .add(1)
-              .div(2)
-              .mul(info.normal.dot(this.#light))
-              .add(1)
-              .div(2)
-          );
-        } else {
-          this.#ctx.setFlip(new Vec2(j, i), new Vec3());
-        }
+        this.scatter(info, this.#maxBounces);
+        this.#ctx.setFlip(new Vec2(j, i), info.mask);
       }
+    }
+  }
+
+  scatter(info: IntersectionInfo, bounces: number) {
+    if (bounces <= 0) return;
+    this.#scene.intersect(info);
+    this.intersectLight(info);
+    bounces--;
+    if (info.hitTime < 0) return;
+    info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(10));
+    let rand = randInUnit().norm();
+    info.ray.direction = info.normal.add(rand);
+    this.scatter(info, bounces);
+  }
+
+  intersectLight(info: IntersectionInfo) {
+    let ray = new Ray(
+      info.ray.at(info.hitTime).add(info.normal.div(100)),
+      this.#light.sub(info.ray.at(info.hitTime)).norm()
+    );
+    let newInfo = {
+      ray: ray,
+      normal: ray.direction,
+      hitTime: -1,
+      mask: info.mask.clone(),
+    };
+    this.#scene.intersect(newInfo);
+    if (newInfo.hitTime > 0) info.mask = new Vec3();
+    else {
+      info.mask = info.mask.add(
+        this.#lightIntensity / this.#light.dist(ray.origin)
+      );
     }
   }
 }

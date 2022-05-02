@@ -4,6 +4,7 @@ export interface IntersectionInfo {
   ray: Ray;
   normal: Vec3;
   hitTime: number;
+  mask: Vec3;
 }
 
 export interface Primitive {
@@ -26,6 +27,7 @@ export class Scene implements Primitive {
         ray: info.ray.clone(),
         normal: info.normal.clone(),
         hitTime: -1,
+        mask: info.mask.clone(),
       };
       object.intersect(newInfo);
       if (
@@ -35,6 +37,7 @@ export class Scene implements Primitive {
         info.ray = newInfo.ray;
         info.normal = newInfo.normal;
         info.hitTime = newInfo.hitTime;
+        info.mask = newInfo.mask;
       }
     }
   }
@@ -43,9 +46,11 @@ export class Scene implements Primitive {
 export class Sphere implements Primitive {
   readonly radius: number;
   readonly origin: Vec3;
-  constructor(radius: number, origin: Vec3) {
+  readonly color: Vec3;
+  constructor(radius: number, origin: Vec3, color = new Vec3(1, 1, 1)) {
     this.radius = radius;
     this.origin = origin;
+    this.color = color;
   }
 
   intersect(info: IntersectionInfo) {
@@ -57,11 +62,9 @@ export class Sphere implements Primitive {
     if (determinant < 0) info.hitTime = -1;
     else {
       let t = (-b - Math.sqrt(determinant)) / (2 * a);
-      info.normal = info.ray.origin
-        .add(info.ray.direction.mul(t))
-        .sub(this.origin)
-        .norm();
+      info.normal = info.ray.origin.add(info.ray.at(t)).sub(this.origin).norm();
       info.hitTime = (-b - Math.sqrt(determinant)) / (2 * a);
+      info.mask = info.mask.mul(this.color);
     }
   }
 }
