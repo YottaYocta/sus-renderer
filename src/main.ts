@@ -15,6 +15,7 @@ context.resize(400, 400);
 //context.resize(40, 40);
 let camera = new Camera(new Vec3(0, 0.5, 0), 1);
 let renderer = new Renderer(context, camera);
+renderer.samples = 20;
 renderer.add(new Sphere(1, new Vec3(2.2, 1.01, -4.2), new Vec3(1, 0.2, 0.2)));
 renderer.add(new Sphere(1.4, new Vec3(0, 1.41, -4), new Vec3(0.2, 0.2, 1)));
 renderer.add(new Sphere(1, new Vec3(-2.2, 1.01, -4.2), new Vec3(0.2, 1, 0.2)));

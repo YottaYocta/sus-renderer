@@ -36,6 +36,10 @@ export class Renderer {
     this.#camera = camera;
   }
 
+  set samples(samples: number) {
+    this.#samples = samples;
+  }
+
   configure() {
     this.#aspect = this.#ctx.width / this.#ctx.height;
     this.#vw = this.#vh * this.#aspect;
@@ -60,7 +64,7 @@ export class Renderer {
         Math.floor(this.#ctx.height / 2)
       );
     let end = new Date();
-    let maxPixelsPerframe = 34 / (start - end);
+    let maxPixelsPerframe = 34 / (start.getTime() - end.getTime());
     maxPixelsPerframe = Math.max(1, Math.floor(maxPixelsPerframe));
 
     this.batch(maxPixelsPerframe * 100);
@@ -95,8 +99,8 @@ export class Renderer {
     let ray = new Ray(
       this.#camera.position.clone(),
       this.#lowerCorner
-        .add(this.#horizontal.mul(x / this.#ctx.width))
-        .add(this.#vertical.mul(y / this.#ctx.height))
+        .add(this.#horizontal.mul((x + (Math.random() * 2 - 1) / 2) / this.#ctx.width))
+        .add(this.#vertical.mul((y + (Math.random() * 2 - 1) / 2) / this.#ctx.height))
         .norm()
     );
     let info = {
