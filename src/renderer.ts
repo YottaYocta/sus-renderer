@@ -1,6 +1,6 @@
 import { Context } from "./context";
 import { Vec3, Vec2, Ray, randInUnit } from "./utils";
-import { Scene, Primitive, IntersectionInfo } from "./primitives";
+import { Scene, Primitive, IntersectionInfo } from "./renderable";
 
 export class Camera {
   position: Vec3;
@@ -16,8 +16,8 @@ export class Renderer {
   #camera: Camera;
 
   #scene = new Scene();
-  #light = new Vec3(4, 10, -5);
-  #lightIntensity = 9.5;
+  #light = new Vec3(4, 10, -3);
+  #lightIntensity = 10;
   #lightSize = 5;
   #worldColor = new Vec3();
   #maxBounces = 5;
@@ -80,7 +80,7 @@ export class Renderer {
       let x = this.#renderingProgress - y * this.#ctx.width;
       let total = new Vec3();
       for (let i = 0; i < this.#samples; i++) {
-        total = total.add(this.castPixel(x, y).mask);
+        total = total.add(this.castPixel(x, y).accumulator);
       }
       total = total.div(this.#samples);
       this.#ctx.setFlip(new Vec2(x, y), total);
@@ -99,8 +99,16 @@ export class Renderer {
     let ray = new Ray(
       this.#camera.position.clone(),
       this.#lowerCorner
-        .add(this.#horizontal.mul((x + (Math.random() * 2 - 1) / 2) / this.#ctx.width))
-        .add(this.#vertical.mul((y + (Math.random() * 2 - 1) / 2) / this.#ctx.height))
+        .add(
+          this.#horizontal.mul(
+            (x + (Math.random() * 2 - 1) / 2) / this.#ctx.width
+          )
+        )
+        .add(
+          this.#vertical.mul(
+            (y + (Math.random() * 2 - 1) / 2) / this.#ctx.height
+          )
+        )
         .norm()
     );
     let info = {
@@ -108,6 +116,7 @@ export class Renderer {
       normal: new Vec3(),
       hitTime: -1,
       mask: new Vec3(1, 1, 1),
+      accumulator: new Vec3(),
     };
     this.scatter(info, this.#maxBounces);
     this.#ctx.setFlip(new Vec2(x, y), info.mask);
@@ -115,19 +124,17 @@ export class Renderer {
   }
 
   scatter(info: IntersectionInfo, bounces: number) {
-    if (bounces <= 0) return;
+    if (bounces <= 0) {
+      return;
+    }
     this.#scene.intersect(info);
     this.intersectLight(info);
-    bounces--;
     if (info.hitTime < 0) {
-      info.mask = info.mask.mul(this.#worldColor);
       return;
-    } else {
-      info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(10));
-      let rand = randInUnit().norm();
-      info.ray.direction = info.normal.add(rand);
-      this.scatter(info, bounces);
     }
+    info.accumulator = info.accumulator.add(info.mask);
+    bounces--;
+    this.scatter(info, bounces);
   }
 
   intersectLight(info: IntersectionInfo) {
@@ -140,13 +147,15 @@ export class Renderer {
     );
     let newInfo = {
       ray: ray,
-      normal: ray.direction,
+      normal: ray.direction.clone(),
       hitTime: -1,
       mask: info.mask.clone(),
+      accumulator: info.accumulator.clone(),
     };
     this.#scene.intersect(newInfo);
-    if (newInfo.hitTime > 0) info.mask = new Vec3();
-    else {
+    if (newInfo.hitTime >= 0) {
+      info.mask = new Vec3();
+    } else {
       info.mask = info.mask.mul(
         this.#lightIntensity / this.#light.dist(ray.origin)
       );
