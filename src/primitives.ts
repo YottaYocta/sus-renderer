@@ -22,12 +22,18 @@ export class Scene implements Primitive {
   }
 
   intersect(info: IntersectionInfo) {
+    let originalInfo = {
+      ray: info.ray.clone(),
+      normal: info.normal.clone(),
+      hitTime: -1,
+      mask: info.mask.clone(),
+    };
     for (let object of this.#objects) {
       let newInfo = {
-        ray: info.ray.clone(),
-        normal: info.normal.clone(),
+        ray: originalInfo.ray.clone(),
+        normal: originalInfo.normal.clone(),
         hitTime: -1,
-        mask: info.mask.clone(),
+        mask: originalInfo.mask.clone(),
       };
       object.intersect(newInfo);
       if (
@@ -64,7 +70,7 @@ export class Sphere implements Primitive {
       let t = (-b - Math.sqrt(determinant)) / (2 * a);
       info.normal = info.ray.origin.add(info.ray.at(t)).sub(this.origin).norm();
       info.hitTime = (-b - Math.sqrt(determinant)) / (2 * a);
-      info.mask = info.mask.mul(this.color);
+      info.mask = info.mask.add(info.mask.mul(this.color));
     }
   }
 }
