@@ -1,6 +1,6 @@
 import { Context } from "./context";
 import { Vec3, Vec2, Ray, randInUnit } from "./utils";
-import { Scene, Primitive, IntersectionInfo } from "./renderable";
+import { Scene, Primitive, Sphere, IntersectionInfo } from "./renderable";
 
 export class Camera {
   position: Vec3;
@@ -16,11 +16,11 @@ export class Renderer {
   #camera: Camera;
 
   #scene = new Scene();
-  #light = new Vec3(4, 10, -3);
-  #lightIntensity = 10;
-  #lightSize = 5;
+  #light = new Vec3(4, 10, 0);
+  #lightIntensity = 8;
+  #lightRadius = 5;
   #worldColor = new Vec3();
-  #maxBounces = 5;
+  #maxBounces = 3;
   #samples = 10;
   #renderingProgress = 0;
 
@@ -38,6 +38,15 @@ export class Renderer {
 
   set samples(samples: number) {
     this.#samples = samples;
+  }
+
+  set light(sphere: Sphere) {
+    this.#light = sphere.origin;
+    this.#lightRadius = sphere.radius;
+  }
+
+  set lightIntensity(lightIntensity: number) {
+    this.#lightIntensity = lightIntensity;
   }
 
   configure() {
@@ -125,11 +134,13 @@ export class Renderer {
 
   scatter(info: IntersectionInfo, bounces: number) {
     if (bounces <= 0) {
+      info.accumulator = info.accumulator.add(new Vec3());
       return;
     }
     this.#scene.intersect(info);
     this.intersectLight(info);
     if (info.hitTime < 0) {
+      info.accumulator = info.accumulator.add(this.#worldColor);
       return;
     }
     info.accumulator = info.accumulator.add(info.mask);
@@ -141,7 +152,7 @@ export class Renderer {
     let ray = new Ray(
       info.ray.at(info.hitTime).add(info.normal.div(100)),
       this.#light
-        .add(randInUnit().mul(this.#lightSize))
+        .add(randInUnit().mul(this.#lightRadius))
         .sub(info.ray.at(info.hitTime))
         .norm()
     );

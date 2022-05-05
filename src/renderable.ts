@@ -84,7 +84,7 @@ export class Sphere implements Primitive {
       info.normal = info.ray.origin.add(info.ray.at(t)).sub(this.origin).norm();
       info.hitTime = (-b - Math.sqrt(determinant)) / (2 * a);
       info.mask = info.mask.mul(this.material.color);
-      info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(10));
+      info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(1000));
       if (Math.random() < this.material.smoothness) {
         let rand = randInUnit().norm();
         info.ray.direction = info.normal.add(rand);

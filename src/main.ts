@@ -15,29 +15,35 @@ context.resize(400, 400);
 //context.resize(40, 40);
 let camera = new Camera(new Vec3(0, 0.5, 0), 1);
 let renderer = new Renderer(context, camera);
-renderer.samples = 3;
+renderer.samples = 50;
+renderer.light = new Sphere(2, new Vec3(3, 7, 1));
+renderer.lightIntensity = 6;
 renderer.add(
   new Sphere(
     1,
     new Vec3(2.2, 1.01, -4.2),
-    new Material(new Vec3(1, 0.2, 0.2), 1)
+    new Material(new Vec3(0.1, 0.1, 0.1), 0.8)
   )
 );
 renderer.add(
-  new Sphere(1.4, new Vec3(0, 1.41, -4), new Material(new Vec3(0.2, 0.2, 1), 1))
+  new Sphere(
+    1.4,
+    new Vec3(0, 1.41, -4),
+    new Material(new Vec3(0.45, 0.3, 0.2), 0.8)
+  )
 );
 renderer.add(
   new Sphere(
     1,
     new Vec3(-2.2, 1.01, -4.2),
-    new Material(new Vec3(0.2, 1, 0.2), 1)
+    new Material(new Vec3(0.2, 0.2, 0.25), 0.8)
   )
 );
 renderer.add(
   new Sphere(
     1000,
     new Vec3(0, -1000, -5),
-    new Material(new Vec3(0.1, 0.1, 0.1), 1)
+    new Material(new Vec3(0.1, 0.1, 0.1), 0.7)
   )
 );
 
