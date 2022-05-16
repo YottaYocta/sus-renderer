@@ -87,7 +87,7 @@ export class Sphere implements Primitive {
     } else {
       let t = (-b - Math.sqrt(determinant)) / (2 * a);
       info.normal = info.ray.origin.add(info.ray.at(t)).sub(this.origin).norm();
-      info.hitTime = (-b - Math.sqrt(determinant)) / (2 * a);
+      info.hitTime = t;
       info.mask = info.mask.mul(this.material.color);
       info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(1000));
       if (Math.random() < this.material.smoothness) {
@@ -96,6 +96,38 @@ export class Sphere implements Primitive {
       } else {
         info.ray.direction = info.normal;
       }
+    }
+  }
+}
+
+export class Plane implements Primitive {
+  readonly normal: Vec3;
+  readonly origin: Vec3;
+  readonly material: Material;
+  constructor(normal: Vec3, origin: Vec3, material = new Material()) {
+    this.normal = normal;
+    this.origin = origin;
+    this.material = material;
+  }
+
+  intersect(info: IntersectionInfo) {
+    let diffOrigin = this.origin.sub(info.ray.origin).dot(this.normal);
+    let d = info.ray.direction.dot(this.normal);
+    if (Math.abs(d) < 0.0001) {
+      info.hitTime = -1;
+    } else {
+      let t = diffOrigin / d;
+      info.normal = this.normal.clone();
+      info.hitTime = t;
+      info.mask = info.mask.mul(this.material.color);
+      info.ray.origin = info.ray.at(info.hitTime).add(info.normal.div(1000));
+      if (Math.random() < this.material.smoothness) {
+        let rand = randInUnit().norm();
+        info.ray.direction = info.normal.add(rand);
+      } else {
+        info.ray.direction = info.normal;
+      }
+      //console.log(info.normal, info.ray.origin);
     }
   }
 }
