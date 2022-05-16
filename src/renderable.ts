@@ -39,6 +39,7 @@ export class Scene implements Primitive {
       mask: info.mask.clone(),
       accumulator: info.accumulator.clone(),
     };
+    let hit = false;
     for (let object of this.#objects) {
       let newInfo = {
         ray: originalInfo.ray.clone(),
@@ -50,13 +51,17 @@ export class Scene implements Primitive {
       object.intersect(newInfo);
       if (
         newInfo.hitTime > 0 &&
-        (info.hitTime > newInfo.hitTime || info.hitTime === -1)
+        (info.hitTime > newInfo.hitTime || info.hitTime < 0)
       ) {
+        hit = true;
         info.ray = newInfo.ray;
         info.normal = newInfo.normal;
         info.hitTime = newInfo.hitTime;
         info.mask = newInfo.mask;
       }
+    }
+    if (!hit) {
+      info.hitTime = -1;
     }
   }
 }
