@@ -16,36 +16,36 @@ context.resize(100, 100);
 let camera = new Camera(new Vec3(0, 0.5, 0), 1);
 let renderer = new Renderer(context, camera);
 renderer.samples = 5;
-renderer.light = new Sphere(3, new Vec3(3, 7, 0));
-renderer.lightIntensity = 30;
+renderer.light = new Sphere(3, new Vec3(5, 7, 0));
+renderer.lightIntensity = 25;
 renderer.worldColor = new Vec3();
-let gloss = 1;
+// body
 renderer.add(
   new Sphere(
     1,
-    new Vec3(2.2, 1, -4.2),
-    new Material(new Vec3(0.1, 0.1, 0.1), gloss)
-  )
-);
-renderer.add(
-  new Sphere(
-    1.4,
-    new Vec3(0, 1.4, -4),
-    new Material(new Vec3(0.45, 0.3, 0.2), gloss)
+    new Vec3(0, 1.5, -3),
+    new Material(new Vec3(0.7, 0.2, 0.2), 0.03)
   )
 );
 renderer.add(
   new Sphere(
     1,
-    new Vec3(-2.2, 1, -4.2),
-    new Material(new Vec3(0.2, 0.2, 0.25), gloss)
+    new Vec3(0, 1.4, -3),
+    new Material(new Vec3(0.7, 0.2, 0.2), 0.03)
+  )
+);
+renderer.add(
+  new Sphere(
+    1,
+    new Vec3(0, 1.6, -3),
+    new Material(new Vec3(0.7, 0.2, 0.2), 0.03)
   )
 );
 renderer.add(
   new Plane(
     new Vec3(0, 1, 0).norm(),
-    new Vec3(0, 0, 0),
-    new Material(new Vec3(0.1, 0.1, 0.1), gloss)
+    new Vec3(),
+    new Material(new Vec3(0.1, 0.1, 0.1), 0.03)
   )
 );
 

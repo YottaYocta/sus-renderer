@@ -149,7 +149,6 @@ export class Renderer {
     }
     let value = this.intersectLight(info).add(this.intersectWorld(info));
     info.accumulator = info.accumulator.add(info.mask.mul(value));
-
     bounces--;
     this.scatter(info, bounces);
   }
