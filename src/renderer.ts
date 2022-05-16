@@ -77,7 +77,7 @@ export class Renderer {
         Math.floor(this.#ctx.height / 2)
       );
     let end = new Date();
-    let maxPixelsPerframe = 34 / (start.getTime() - end.getTime());
+    let maxPixelsPerframe = 16 / (start.getTime() - end.getTime());
     maxPixelsPerframe = Math.max(1, Math.floor(maxPixelsPerframe));
 
     this.batch(maxPixelsPerframe * 100);
