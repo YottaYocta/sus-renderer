@@ -170,13 +170,12 @@ export class Renderer {
   }
 
   intersectLight(info: IntersectionInfo) {
-    let ray = new Ray(
-      info.ray.origin.clone(),
-      this.#light
-        .add(randInUnit().mul(this.#lightRadius))
-        .sub(info.ray.origin.clone())
-        .norm()
-    );
+    let target = this.#light
+      .add(randInUnit().mul(this.#lightRadius))
+      .sub(info.ray.origin.clone())
+      .norm();
+
+    let ray = new Ray(info.ray.origin.clone(), target);
     let newInfo = {
       ray: ray,
       normal: info.normal.clone(),
@@ -185,7 +184,9 @@ export class Renderer {
       accumulator: info.accumulator.clone(),
     };
     this.#scene.intersect(newInfo);
-    if (newInfo.hitTime >= 0) {
+    if (
+      newInfo.ray.origin.dist(info.ray.origin) < info.ray.origin.dist(target)
+    ) {
       return new Vec3();
     } else {
       let value = this.#lightIntensity / this.#light.dist(ray.origin);
