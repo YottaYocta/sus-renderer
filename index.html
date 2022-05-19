@@ -9,7 +9,10 @@
   <body>
     <div id="canvas-container" class="f-2"></div>
     <div id="sidebar" class="f-1">
+      <button id="clear-btn" class="input span mg-v">Clear Scene</button>
       <div class="h span mg-v">
+        <button id="render-select-btn" class="input f-1">Render</button>
+        <div class="space-h"></div>
         <button id="sphere-select-btn" class="input f-1">Sphere</button>
         <div class="space-h"></div>
         <button id="plane-select-btn" class="input f-1">Plane</button>
@@ -131,7 +134,6 @@
           <label for="x" class="label f-3">X</label>
           <div class="space-h"></div>
           <input
-            id="x"
             name="x"
             type="number"
             step="any"
@@ -143,7 +145,6 @@
           <label for="y" class="label f-3">Y</label>
           <div class="space-h"></div>
           <input
-            id="y"
             name="y"
             type="number"
             step="any"
@@ -155,7 +156,6 @@
           <label for="z" class="label f-3">Z</label>
           <div class="space-h"></div>
           <input
-            id="z"
             name="z"
             type="number"
             step="any"
@@ -168,7 +168,6 @@
           <label for="r" class="label f-3">Red</label>
           <div class="space-h"></div>
           <input
-            id="r"
             name="r"
             type="number"
             step="any"
@@ -180,7 +179,6 @@
           <label for="g" class="label f-3">Green</label>
           <div class="space-h"></div>
           <input
-            id="g"
             name="g"
             type="number"
             step="any"
@@ -192,7 +190,6 @@
           <label for="b" class="label f-3">Blue</label>
           <div class="space-h"></div>
           <input
-            id="b"
             name="b"
             type="number"
             step="any"
@@ -206,12 +203,22 @@
       </form>
       <form id="amogus-form">
         <div class="h span label mg-v">Figure</div>
+        <div class="h span mg-v">
+          <label for="resolution" class="label f-3">Resolution</label>
+          <div class="space-h"></div>
+          <input
+            name="resolution"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="5"
+          />
+        </div>
         <div class="h span label">Transform</div>
         <div class="h span mg-v">
           <label for="x" class="label f-3">X</label>
           <div class="space-h"></div>
           <input
-            id="x"
             name="x"
             type="number"
             step="any"
@@ -223,7 +230,6 @@
           <label for="y" class="label f-3">Y</label>
           <div class="space-h"></div>
           <input
-            id="y"
             name="y"
             type="number"
             step="any"
@@ -235,7 +241,6 @@
           <label for="z" class="label f-3">Z</label>
           <div class="space-h"></div>
           <input
-            id="z"
             name="z"
             type="number"
             step="any"
@@ -248,7 +253,6 @@
           <label for="r" class="label f-3">Red</label>
           <div class="space-h"></div>
           <input
-            id="r"
             name="r"
             type="number"
             step="any"
@@ -260,7 +264,6 @@
           <label for="g" class="label f-3">Green</label>
           <div class="space-h"></div>
           <input
-            id="g"
             name="g"
             type="number"
             step="any"
@@ -272,7 +275,6 @@
           <label for="b" class="label f-3">Blue</label>
           <div class="space-h"></div>
           <input
-            id="b"
             name="b"
             type="number"
             step="any"
@@ -284,8 +286,136 @@
           Add Figure
         </button>
       </form>
-      <button id="render-btn" class="input span mg-v">Render Image</button>
-      <button id="clear-btn" class="input span mg-v">Clear Scene</button>
+      <form id="render-form">
+        <div class="h span label">Render Settings</div>
+        <div class="h span mg-v">
+          <label for="x" class="label f-3">Width</label>
+          <div class="space-h"></div>
+          <input
+            name="width"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="400"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Height</label>
+          <div class="space-h"></div>
+          <input
+            name="height"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="200"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Samples</label>
+          <div class="space-h"></div>
+          <input
+            name="samples"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="5"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Max Bounces</label>
+          <div class="space-h"></div>
+          <input
+            name="bounces"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="3"
+          />
+        </div>
+        <div class="label span mg-v">Light</div>
+        <div class="h span mg-v">
+          <label for="x" class="label f-3">X</label>
+          <div class="space-h"></div>
+          <input
+            name="x"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="10"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="y" class="label f-3">Y</label>
+          <div class="space-h"></div>
+          <input
+            name="y"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="10"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="z" class="label f-3">Z</label>
+          <div class="space-h"></div>
+          <input
+            name="z"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="intensity" class="label f-3">Intensity</label>
+          <div class="space-h"></div>
+          <input
+            name="intensity"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="90"
+          />
+        </div>
+        <div class="h span label">World Color</div>
+        <div class="h span mg-v">
+          <label for="r" class="label f-3">Red</label>
+          <div class="space-h"></div>
+          <input
+            name="r"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="g" class="label f-3">Green</label>
+          <div class="space-h"></div>
+          <input
+            name="g"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Blue</label>
+          <div class="space-h"></div>
+          <input
+            name="b"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+
+        <button id="render-btn" class="input span mg-v" type="submit">
+          Update Settings/Render
+        </button>
+      </form>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

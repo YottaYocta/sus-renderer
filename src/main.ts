@@ -7,18 +7,18 @@ import { Sphere, Plane, Material } from "./renderable";
 
 let canvasContainer = document.getElementById("canvas-container");
 
-let renderBtn = document.getElementById("render-btn");
 let clearBtn = document.getElementById("clear-btn");
 
 let sphereSelect = document.getElementById("sphere-select-btn");
 let planeSelect = document.getElementById("plane-select-btn");
 let amogusSelect = document.getElementById("amogus-select-btn");
+let renderSelect = document.getElementById("render-select-btn");
 
 let sphereForm = document.getElementById("sphere-form") as HTMLFormElement;
 let planeForm = document.getElementById("plane-form") as HTMLFormElement;
 let amogusForm = document.getElementById("amogus-form") as HTMLFormElement;
+let renderForm = document.getElementById("render-form") as HTMLFormElement;
 if (
-  !renderBtn ||
   !clearBtn ||
   !canvasContainer ||
   !sphereForm ||
@@ -26,57 +26,75 @@ if (
   !planeSelect ||
   !planeForm ||
   !amogusSelect ||
-  !amogusForm
+  !amogusForm ||
+  !renderSelect ||
+  !renderForm
 )
   throw "element error";
 
 let context = new Context(canvasContainer);
-context.resize(400, 200);
-
 let camera = new Camera(new Vec3(0, 0.5, -3), 4);
 let renderer = new Renderer(context, camera);
-renderer.samples = 10;
-renderer.light = new Sphere(3, new Vec3(5, 7, 3).div(2));
-renderer.lightIntensity = 100;
-renderer.worldColor = new Vec3();
+let forms = [sphereForm, planeForm, amogusForm, renderForm];
 
-function display(index: number) {
-  if (index === 0) {
-    sphereForm.style.display = "block";
-    planeForm.style.display = "none";
-    amogusForm.style.display = "none";
-  } else if (index === 1) {
-    sphereForm.style.display = "none";
-    planeForm.style.display = "block";
-    amogusForm.style.display = "none";
-  } else {
-    sphereForm.style.display = "none";
-    planeForm.style.display = "none";
-    amogusForm.style.display = "block";
+function display(targetForm: HTMLFormElement) {
+  for (let form of forms) {
+    if (form === targetForm) {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
+    }
   }
 }
 
-display(0);
+display(renderForm);
 
+renderSelect.addEventListener("click", () => {
+  display(renderForm);
+});
 sphereSelect.addEventListener("click", () => {
-  display(0);
+  display(sphereForm);
 });
 planeSelect.addEventListener("click", () => {
-  display(1);
+  display(planeForm);
 });
 amogusSelect.addEventListener("click", () => {
-  display(2);
+  display(amogusForm);
+});
+
+renderForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let data = new FormData(renderForm);
+  let width = parseFloat(data.get("width") as string);
+  let height = parseFloat(data.get("height") as string);
+  let samples = parseFloat(data.get("samples") as string);
+  let bounces = parseFloat(data.get("bounces") as string);
+  let x = parseFloat(data.get("x") as string);
+  let y = parseFloat(data.get("y") as string);
+  let z = parseFloat(data.get("z") as string);
+  let intensity = parseFloat(data.get("intensity") as string);
+  let r = parseFloat(data.get("r") as string);
+  let g = parseFloat(data.get("g") as string);
+  let b = parseFloat(data.get("b") as string);
+  context.resize(width, height);
+  renderer.light = new Sphere(3, new Vec3(x, y, z));
+  renderer.lightIntensity = intensity;
+  renderer.worldColor = new Vec3(r, g, b);
+  renderer.maxBounces = bounces;
+  renderer.samples = samples;
+  renderer.configure();
+  renderer.render();
 });
 
 sphereForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let data = new FormData(sphereForm);
-  let x = parseInt(data.get("x") as string);
-  let y = parseInt(data.get("y") as string);
-  let z = parseInt(data.get("z") as string);
-  let r = parseInt(data.get("r") as string);
-  let g = parseInt(data.get("g") as string);
-  let b = parseInt(data.get("b") as string);
+  let x = parseFloat(data.get("x") as string);
+  let y = parseFloat(data.get("y") as string);
+  let z = parseFloat(data.get("z") as string);
+  let r = parseFloat(data.get("r") as string);
+  let g = parseFloat(data.get("g") as string);
+  let b = parseFloat(data.get("b") as string);
   renderer.add(
     new Sphere(1, new Vec3(x, y, z), new Material(new Vec3(r, g, b), 0))
   );
@@ -86,16 +104,15 @@ sphereForm.addEventListener("submit", (e) => {
 planeForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let data = new FormData(planeForm);
-  let x = parseInt(data.get("x") as string);
-  let y = parseInt(data.get("y") as string);
-  let z = parseInt(data.get("z") as string);
-  let nx = parseInt(data.get("nx") as string);
-  let ny = parseInt(data.get("ny") as string);
-  let nz = parseInt(data.get("nz") as string);
-  let r = parseInt(data.get("r") as string);
-  let g = parseInt(data.get("g") as string);
-  let b = parseInt(data.get("b") as string);
-  console.log(nx, ny, nz);
+  let x = parseFloat(data.get("x") as string);
+  let y = parseFloat(data.get("y") as string);
+  let z = parseFloat(data.get("z") as string);
+  let nx = parseFloat(data.get("nx") as string);
+  let ny = parseFloat(data.get("ny") as string);
+  let nz = parseFloat(data.get("nz") as string);
+  let r = parseFloat(data.get("r") as string);
+  let g = parseFloat(data.get("g") as string);
+  let b = parseFloat(data.get("b") as string);
   renderer.add(
     new Plane(
       new Vec3(nx, ny, nz).norm(),
@@ -109,13 +126,14 @@ planeForm.addEventListener("submit", (e) => {
 amogusForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let data = new FormData(amogusForm);
-  let x = parseInt(data.get("x") as string);
-  let y = parseInt(data.get("y") as string);
-  let z = parseInt(data.get("z") as string);
-  let r = parseInt(data.get("r") as string);
-  let g = parseInt(data.get("g") as string);
-  let b = parseInt(data.get("b") as string);
-  SpawnMogus(new Vec3(x, y, z), new Vec3(r, g, b));
+  let resolution = parseFloat(data.get("resolution") as string);
+  let x = parseFloat(data.get("x") as string);
+  let y = parseFloat(data.get("y") as string);
+  let z = parseFloat(data.get("z") as string);
+  let r = parseFloat(data.get("r") as string);
+  let g = parseFloat(data.get("g") as string);
+  let b = parseFloat(data.get("b") as string);
+  SpawnMogus(new Vec3(x, y, z), new Vec3(r, g, b), resolution);
   amogusForm.reset();
 });
 
@@ -198,11 +216,6 @@ renderer.add(
     new Material(new Vec3(0.05, 0.05, 0.05), 0)
   )
 );
-
-renderBtn.addEventListener("click", () => {
-  renderer.configure();
-  renderer.render();
-});
 
 clearBtn.addEventListener("click", () => {
   renderer.clear();

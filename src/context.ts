@@ -14,6 +14,15 @@ export class Context {
     parent.appendChild(this.#canvasElement);
   }
 
+  clear() {
+    this.#ctx.clearRect(
+      0,
+      0,
+      this.#canvasElement.width,
+      this.#canvasElement.height
+    );
+  }
+
   resize(width: number, height: number) {
     this.#canvasElement.width = width;
     this.#canvasElement.height = height;

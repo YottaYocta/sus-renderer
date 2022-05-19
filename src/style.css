@@ -79,7 +79,6 @@ body {
 }
 
 .input {
-  transition: 0.5s;
   height: 2rem;
   border: solid #777777 0.1rem;
   border-radius: 0.5rem;

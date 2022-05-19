@@ -16,13 +16,14 @@ export class Renderer {
   #camera: Camera;
 
   #scene = new Scene();
-  #light = new Vec3(4, 10, 0);
-  #lightIntensity = 8;
-  #lightRadius = 5;
-  #worldColor = new Vec3(0.5, 0.5, 0.5).mul(2);
-  #maxBounces = 3;
-  #samples = 10;
-  #renderingProgress = 0;
+  #light = new Vec3();
+  #lightIntensity = 0;
+  #lightRadius = 0;
+  #worldColor = new Vec3();
+  #maxBounces = 0;
+  #samples = 0;
+  #currentPixels = 0;
+  #maxPixelsPerFrame = 0;
 
   #aspect = 1;
   #vh = 2;
@@ -34,6 +35,7 @@ export class Renderer {
   constructor(ctx: Context, camera: Camera) {
     this.#ctx = ctx;
     this.#camera = camera;
+    this.renderLoop();
   }
 
   set samples(samples: number) {
@@ -53,6 +55,10 @@ export class Renderer {
     this.#worldColor = worldColor;
   }
 
+  set maxBounces(maxBounces: number) {
+    this.#maxBounces = maxBounces;
+  }
+
   configure() {
     this.#aspect = this.#ctx.width / this.#ctx.height;
     this.#vw = this.#vh * this.#aspect;
@@ -66,15 +72,12 @@ export class Renderer {
 
   add(primitive: Primitive) {
     this.#scene.add(primitive);
-    console.log(this.#scene);
-  }
-
-  clear() {
-    this.#scene.clear();
+    this.render();
   }
 
   render() {
-    this.#renderingProgress = 0;
+    this.configure();
+    this.#ctx.clear();
     let start = new Date();
     for (let i = 0; i < this.#samples; i++)
       this.castPixel(
@@ -82,35 +85,42 @@ export class Renderer {
         Math.floor(this.#ctx.height / 2)
       );
     let end = new Date();
-    let maxPixelsPerframe = 16 / (start.getTime() - end.getTime());
-    maxPixelsPerframe = Math.max(1, Math.floor(maxPixelsPerframe));
-
-    this.batch(maxPixelsPerframe * 100);
+    this.#currentPixels = 0;
+    this.#maxPixelsPerFrame =
+      Math.max(
+        1,
+        Math.floor(16 / Math.max(1, end.getTime() - start.getTime()))
+      ) * 10;
   }
 
-  batch(pixels: number) {
-    let originalPixels = pixels;
-    while (
-      this.#renderingProgress <= this.#ctx.width * this.#ctx.height &&
-      pixels >= 0
-    ) {
-      let y = Math.floor(this.#renderingProgress / this.#ctx.width);
-      let x = this.#renderingProgress - y * this.#ctx.width;
-      let total = new Vec3();
-      for (let i = 0; i < this.#samples; i++) {
-        total = total.add(this.castPixel(x, y).accumulator);
+  clear() {
+    this.#scene.clear();
+    this.render();
+  }
+
+  renderLoop() {
+    if (this.#currentPixels <= this.#ctx.width * this.#ctx.height) {
+      let count = 0;
+      while (
+        this.#currentPixels <= this.#ctx.width * this.#ctx.height &&
+        count < this.#maxPixelsPerFrame
+      ) {
+        let y = Math.floor(this.#currentPixels / this.#ctx.width);
+        let x = this.#currentPixels - y * this.#ctx.width;
+        let total = new Vec3();
+        for (let i = 0; i < this.#samples; i++) {
+          total = total.add(this.castPixel(x, y).accumulator);
+        }
+        total = total.div(this.#samples);
+        this.#ctx.setFlip(new Vec2(x, y), total);
+        this.#currentPixels++;
+        count++;
       }
-      total = total.div(this.#samples);
-      this.#ctx.setFlip(new Vec2(x, y), total);
-      this.#renderingProgress++;
-      pixels--;
     }
 
-    if (this.#renderingProgress < this.#ctx.width * this.#ctx.height) {
-      window.requestAnimationFrame(() => {
-        this.batch(originalPixels);
-      });
-    }
+    window.requestAnimationFrame(() => {
+      this.renderLoop();
+    });
   }
 
   castPixel(x: number, y: number) {
