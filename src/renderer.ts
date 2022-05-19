@@ -61,11 +61,16 @@ export class Renderer {
     this.#lowerCorner = this.#camera.position
       .sub(this.#horizontal.div(2))
       .sub(this.#vertical.div(2))
-      .sub(new Vec3(0, 0, this.#camera.focal));
+      .add(new Vec3(0, 0, this.#camera.focal));
   }
 
   add(primitive: Primitive) {
     this.#scene.add(primitive);
+    console.log(this.#scene);
+  }
+
+  clear() {
+    this.#scene.clear();
   }
 
   render() {
@@ -174,7 +179,6 @@ export class Renderer {
       .add(randInUnit().mul(this.#lightRadius))
       .sub(info.ray.origin.clone())
       .norm();
-
     let ray = new Ray(info.ray.origin.clone(), target);
     let newInfo = {
       ray: ray,
@@ -185,6 +189,7 @@ export class Renderer {
     };
     this.#scene.intersect(newInfo);
     if (
+      newInfo.hitTime >= 0 &&
       newInfo.ray.origin.dist(info.ray.origin) < info.ray.origin.dist(target)
     ) {
       return new Vec3();

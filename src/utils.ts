@@ -70,6 +70,7 @@ export class Vec3 {
 
   norm() {
     let mag = this.mag;
+    if (mag === 0) return new Vec3();
     return new Vec3(this.x / mag, this.y / mag, this.z / mag);
   }
 

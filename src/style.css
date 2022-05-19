@@ -13,21 +13,74 @@ body {
 }
 
 #canvas-container {
-  flex: 2;
   filter: blur(0.1px);
   overflow: scroll;
 }
 
 #sidebar {
-  flex: 1;
   background: #111111;
+  overflow: scroll;
 }
 
-.btn {
-  transition: 0.5s;
-  margin: 1rem;
+.span {
   width: 90%;
-  height: 3rem;
+  margin: auto;
+}
+
+.mg-v {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mg-h {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.pd-h {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.f-1 {
+  flex: 1;
+}
+
+.f-2 {
+  flex: 2;
+}
+
+.f-3 {
+  flex: 3;
+}
+
+.f-8 {
+  flex: 8;
+}
+
+.space-h {
+  width: 1rem;
+}
+
+.h {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.label {
+  height: 2rem;
+  border: solid #777777 0.1rem;
+  border-radius: 0.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  transition: 0.5s;
+  height: 2rem;
   border: solid #777777 0.1rem;
   border-radius: 0.5rem;
   color: #777777;

@@ -7,11 +7,285 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="canvas-container"></div>
-    <div id="sidebar">
-      <div id="render-btn" class="btn">
-        <p>Render Image</p>
+    <div id="canvas-container" class="f-2"></div>
+    <div id="sidebar" class="f-1">
+      <div class="h span mg-v">
+        <button id="sphere-select-btn" class="input f-1">Sphere</button>
+        <div class="space-h"></div>
+        <button id="plane-select-btn" class="input f-1">Plane</button>
+        <div class="space-h"></div>
+        <button id="amogus-select-btn" class="input f-1">Figure</button>
       </div>
+      <form id="plane-form">
+        <div class="h span label mg-v">Plane</div>
+        <div class="h span label">Transform</div>
+        <div class="h span mg-v">
+          <label for="x" class="label f-3">X</label>
+          <div class="space-h"></div>
+          <input
+            name="x"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="y" class="label f-3">Y</label>
+          <div class="space-h"></div>
+          <input
+            name="y"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="z" class="label f-3">Z</label>
+          <div class="space-h"></div>
+          <input
+            name="z"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span label">Normal</div>
+        <div class="h span mg-v">
+          <label for="nx" class="label f-3">X</label>
+          <div class="space-h"></div>
+          <input
+            name="nx"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="ny" class="label f-3">Y</label>
+          <div class="space-h"></div>
+          <input
+            name="ny"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="nz" class="label f-3">Z</label>
+          <div class="space-h"></div>
+          <input
+            name="nz"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span label">Color</div>
+        <div class="h span mg-v">
+          <label for="r" class="label f-3">Red</label>
+          <div class="space-h"></div>
+          <input
+            name="r"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="g" class="label f-3">Green</label>
+          <div class="space-h"></div>
+          <input
+            name="g"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Blue</label>
+          <div class="space-h"></div>
+          <input
+            name="b"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <button id="plane-btn" class="input span" type="submit">
+          Add Plane
+        </button>
+      </form>
+      <form id="sphere-form">
+        <div class="h span label mg-v">Sphere</div>
+        <div class="h span label">Transform</div>
+        <div class="h span mg-v">
+          <label for="x" class="label f-3">X</label>
+          <div class="space-h"></div>
+          <input
+            id="x"
+            name="x"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="y" class="label f-3">Y</label>
+          <div class="space-h"></div>
+          <input
+            id="y"
+            name="y"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="z" class="label f-3">Z</label>
+          <div class="space-h"></div>
+          <input
+            id="z"
+            name="z"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span label">Color</div>
+        <div class="h span mg-v">
+          <label for="r" class="label f-3">Red</label>
+          <div class="space-h"></div>
+          <input
+            id="r"
+            name="r"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="g" class="label f-3">Green</label>
+          <div class="space-h"></div>
+          <input
+            id="g"
+            name="g"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Blue</label>
+          <div class="space-h"></div>
+          <input
+            id="b"
+            name="b"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <button id="sphere-btn" class="input span" type="submit">
+          Add Sphere
+        </button>
+      </form>
+      <form id="amogus-form">
+        <div class="h span label mg-v">Figure</div>
+        <div class="h span label">Transform</div>
+        <div class="h span mg-v">
+          <label for="x" class="label f-3">X</label>
+          <div class="space-h"></div>
+          <input
+            id="x"
+            name="x"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="y" class="label f-3">Y</label>
+          <div class="space-h"></div>
+          <input
+            id="y"
+            name="y"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="z" class="label f-3">Z</label>
+          <div class="space-h"></div>
+          <input
+            id="z"
+            name="z"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span label">Color</div>
+        <div class="h span mg-v">
+          <label for="r" class="label f-3">Red</label>
+          <div class="space-h"></div>
+          <input
+            id="r"
+            name="r"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="g" class="label f-3">Green</label>
+          <div class="space-h"></div>
+          <input
+            id="g"
+            name="g"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <div class="h span mg-v">
+          <label for="b" class="label f-3">Blue</label>
+          <div class="space-h"></div>
+          <input
+            id="b"
+            name="b"
+            type="number"
+            step="any"
+            class="input f-8 pd-h"
+            value="0"
+          />
+        </div>
+        <button id="amogus-btn" class="input span" type="submit">
+          Add Figure
+        </button>
+      </form>
+      <button id="render-btn" class="input span mg-v">Render Image</button>
+      <button id="clear-btn" class="input span mg-v">Clear Scene</button>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
