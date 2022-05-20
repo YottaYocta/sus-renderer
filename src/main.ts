@@ -69,6 +69,7 @@ renderForm.addEventListener("submit", (e) => {
   let height = parseFloat(data.get("height") as string);
   let samples = parseFloat(data.get("samples") as string);
   let bounces = parseFloat(data.get("bounces") as string);
+  let radius = parseFloat(data.get("radius") as string);
   let x = parseFloat(data.get("x") as string);
   let y = parseFloat(data.get("y") as string);
   let z = parseFloat(data.get("z") as string);
@@ -76,8 +77,15 @@ renderForm.addEventListener("submit", (e) => {
   let r = parseFloat(data.get("r") as string);
   let g = parseFloat(data.get("g") as string);
   let b = parseFloat(data.get("b") as string);
+  let cx = parseFloat(data.get("cx") as string);
+  let cy = parseFloat(data.get("cy") as string);
+  let cz = parseFloat(data.get("cz") as string);
+  let focal = parseFloat(data.get("focal") as string);
   context.resize(width, height);
-  renderer.light = new Sphere(3, new Vec3(x, y, z));
+  camera.position = new Vec3(cx, cy, cz);
+  camera.focal = focal;
+  console.log(camera);
+  renderer.light = new Sphere(radius, new Vec3(x, y, z));
   renderer.lightIntensity = intensity;
   renderer.worldColor = new Vec3(r, g, b);
   renderer.maxBounces = bounces;
@@ -92,11 +100,17 @@ sphereForm.addEventListener("submit", (e) => {
   let x = parseFloat(data.get("x") as string);
   let y = parseFloat(data.get("y") as string);
   let z = parseFloat(data.get("z") as string);
+  let radius = parseFloat(data.get("radius") as string);
   let r = parseFloat(data.get("r") as string);
   let g = parseFloat(data.get("g") as string);
   let b = parseFloat(data.get("b") as string);
+  let roughness = parseFloat(data.get("roughness") as string);
   renderer.add(
-    new Sphere(1, new Vec3(x, y, z), new Material(new Vec3(r, g, b), 0))
+    new Sphere(
+      radius,
+      new Vec3(x, y, z),
+      new Material(new Vec3(r, g, b), roughness)
+    )
   );
   sphereForm.reset();
 });
@@ -113,11 +127,13 @@ planeForm.addEventListener("submit", (e) => {
   let r = parseFloat(data.get("r") as string);
   let g = parseFloat(data.get("g") as string);
   let b = parseFloat(data.get("b") as string);
+  let roughness = parseFloat(data.get("roughness") as string);
+  console.log(r, g, b);
   renderer.add(
     new Plane(
       new Vec3(nx, ny, nz).norm(),
       new Vec3(x, y, z),
-      new Material(new Vec3(r, g, b), 0)
+      new Material(new Vec3(r, g, b), roughness)
     )
   );
   planeForm.reset();
